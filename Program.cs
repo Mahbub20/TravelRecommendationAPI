@@ -1,7 +1,14 @@
+using TravelRecommendationApi.Services;
+using TravelRecommendationApi.Utils;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<DistrictService>();
+builder.Services.AddSingleton<HttpHelper>();
+builder.Services.AddSingleton<WeatherService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
