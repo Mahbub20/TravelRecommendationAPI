@@ -23,28 +23,35 @@ namespace TravelRecommendationApi.Controllers
         [HttpGet("top10")]
         public async Task<IActionResult> GetTop10()
         {
-            var districts = _districtService.GetAllDistricts();
-
-            var tasks = districts.Select(async d => new
+            try
             {
-                d.Name,
-                Weather = await _weatherService.Get7DayWeatherAsync(d.Lat, d.Long)
-            });
+                var districts = _districtService.GetAllDistricts();
 
-            var results = await Task.WhenAll(tasks);
-
-            var top10 = results
-                .OrderBy(x => x.Weather.AverageTemp)
-                .ThenBy(x => x.Weather.AverageAirQuality)
-                .Take(10)
-                .Select(x => new
+                var tasks = districts.Select(async d => new
                 {
-                    x.Name,
-                    x.Weather.AverageTemp,
-                    x.Weather.AverageAirQuality
+                    d.Name,
+                    Weather = await _weatherService.Get7DayWeatherAsync(d.Lat, d.Long)
                 });
 
-            return Ok(top10);
+                var results = await Task.WhenAll(tasks);
+
+                var top10 = results
+                    .OrderBy(x => x.Weather.AverageTemp)
+                    .ThenBy(x => x.Weather.AverageAirQuality)
+                    .Take(10)
+                    .Select(x => new
+                    {
+                        x.Name,
+                        x.Weather.AverageTemp,
+                        x.Weather.AverageAirQuality
+                    });
+
+                return Ok(top10);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Result = "Error", Reason = ex.Message });
+            }
         }
     }
 }
