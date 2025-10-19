@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TravelRecommendationApi.Properties.Models;
+using TravelRecommendationApi.Models;
 using TravelRecommendationApi.Services;
 
 namespace TravelRecommendationApi.Controllers

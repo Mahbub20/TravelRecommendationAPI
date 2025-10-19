@@ -26,24 +26,46 @@ namespace TravelRecommendationApi.Controllers
             try
             {
                 var districts = _districtService.GetAllDistricts();
+                var results = new List<object>();
+                var throttler = new SemaphoreSlim(5); // limit 5 concurrent API calls
 
-                var tasks = districts.Select(async d => new
+                var tasks = districts.Select(async d =>
                 {
-                    d.Name,
-                    Weather = await _weatherService.Get7DayWeatherAsync(d.Lat, d.Long)
+                    await throttler.WaitAsync();
+                    try
+                    {
+                        double lat = double.TryParse(d.Lat, out var latVal) ? latVal : 0;
+                        double lon = double.TryParse(d.Long, out var lonVal) ? lonVal : 0;
+
+                        if (lat == 0 || lon == 0) return;
+
+                        var weather = await _weatherService.Get7DayWeatherAsync(lat, lon);
+                        lock (results)
+                        {
+                            results.Add(new { d.Name, Weather = weather });
+                        }
+                    }
+                    catch
+                    {
+                        // skip failed district quietly
+                    }
+                    finally
+                    {
+                        throttler.Release();
+                    }
                 });
 
-                var results = await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks);
 
                 var top10 = results
-                    .OrderBy(x => x.Weather.AverageTemp)
-                    .ThenBy(x => x.Weather.AverageAirQuality)
+                    .OrderBy(x => ((dynamic)x).Weather.AverageTemp)
+                    .ThenBy(x => ((dynamic)x).Weather.AverageAirQuality)
                     .Take(10)
                     .Select(x => new
                     {
-                        x.Name,
-                        x.Weather.AverageTemp,
-                        x.Weather.AverageAirQuality
+                        ((dynamic)x).Name,
+                        ((dynamic)x).Weather.AverageTemp,
+                        ((dynamic)x).Weather.AverageAirQuality
                     });
 
                 return Ok(top10);
@@ -53,5 +75,6 @@ namespace TravelRecommendationApi.Controllers
                 return StatusCode(500, new { Result = "Error", Reason = ex.Message });
             }
         }
+
     }
 }
