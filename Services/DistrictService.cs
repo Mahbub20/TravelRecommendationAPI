@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using TravelRecommendationApi.Properties.Models;
+using TravelRecommendationApi.Models;
 
 namespace TravelRecommendationApi.Services
 {
@@ -20,7 +20,8 @@ namespace TravelRecommendationApi.Services
         {
             var json = File.ReadAllText("data/bd-districts.json");
             var wrapper = JsonSerializer.Deserialize<JsonElement>(json);
-            _districts = JsonSerializer.Deserialize<List<District>>(wrapper.GetProperty("districts"))!;
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _districts = JsonSerializer.Deserialize<List<District>>(wrapper.GetProperty("districts"), options)!;
         }
 
         public List<District> GetAllDistricts() => _districts;

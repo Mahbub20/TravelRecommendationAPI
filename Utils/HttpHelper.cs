@@ -12,7 +12,7 @@ namespace TravelRecommendationApi.Utils
         private readonly HttpClient _client;
         public HttpHelper()
         {
-            _client = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+            _client = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
         }
 
         public async Task<T?> GetAsync<T>(string url)
