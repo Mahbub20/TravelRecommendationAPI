@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TravelRecommendationApi.Properties.Models
+namespace TravelRecommendationApi.Models
 {
     public class WeatherData
     {

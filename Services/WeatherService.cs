@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using TravelRecommendationApi.Properties.Models;
+using TravelRecommendationApi.Models;
 using TravelRecommendationApi.Utils;
 
 namespace TravelRecommendationApi.Services
@@ -26,7 +26,11 @@ namespace TravelRecommendationApi.Services
             var air = await _http.GetAsync<JsonElement>(airUrl);
 
             var times = weather.GetProperty("hourly").GetProperty("time").EnumerateArray().Select(t => t.GetString()).ToList();
-            var temps = weather.GetProperty("hourly").GetProperty("temperature_2m").EnumerateArray().Select(t => t.GetDouble()).ToList();
+            var temps = weather.GetProperty("hourly").GetProperty("temperature_2m")
+            .EnumerateArray()
+            .Select(t => t.ValueKind == JsonValueKind.Number ? t.GetDouble() : double.NaN)
+            .Where(v => !double.IsNaN(v))
+            .ToList();
 
             var tempsAt2PM = new List<double>();
             for (int i = 0; i < times.Count; i++)
@@ -34,10 +38,13 @@ namespace TravelRecommendationApi.Services
                 if (times[i]?.EndsWith("T14:00") ?? false)
                     tempsAt2PM.Add(temps[i]);
             }
-            double avgTemp2PM = tempsAt2PM.Average();
-
-            var pm25 = air.GetProperty("hourly").GetProperty("pm2_5").EnumerateArray().Select(t => t.GetDouble()).ToList();
-            double avgPm25 = pm25.Average();
+            double avgTemp2PM = tempsAt2PM.Count > 0 ? tempsAt2PM.Average() : 0.0;
+            var pm25 = air.GetProperty("hourly").GetProperty("pm2_5")
+            .EnumerateArray()
+            .Select(t => t.ValueKind == JsonValueKind.Number ? t.GetDouble() : double.NaN)
+            .Where(v => !double.IsNaN(v))
+            .ToList();
+            double avgPm25 = pm25.Count > 0 ? pm25.Average() : 0.0;
 
             return new WeatherData { AverageTemp = avgTemp2PM, AverageAirQuality = avgPm25 };
         }

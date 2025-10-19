@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TravelRecommendationApi.Properties.Models;
+using TravelRecommendationApi.Models;
 
 namespace TravelRecommendationApi.Services
 {
@@ -25,10 +25,10 @@ namespace TravelRecommendationApi.Services
             }
 
             var currentTemp = await _weatherService.GetTempAt2PMOnDateAsync(req.CurrentLat, req.CurrentLong, req.TravelDate);
-            var destTemp = await _weatherService.GetTempAt2PMOnDateAsync(dest.Lat, dest.Long, req.TravelDate);
+            var destTemp = await _weatherService.GetTempAt2PMOnDateAsync(Convert.ToDouble(dest.Lat), Convert.ToDouble(dest.Long), req.TravelDate);
 
             var currentPm = await _weatherService.GetPm25Async(req.CurrentLat, req.CurrentLong);
-            var destPm = await _weatherService.GetPm25Async(dest.Lat, dest.Long);
+            var destPm = await _weatherService.GetPm25Async(Convert.ToDouble(dest.Lat), Convert.ToDouble(dest.Long));
 
             var tempDiff = currentTemp - destTemp;
             var airDiff = currentPm - destPm;
