@@ -4,6 +4,7 @@ using TravelRecommendationApi.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMemoryCache(); // Add memory cache
 builder.Services.AddSingleton<DistrictService>();
 builder.Services.AddSingleton<HttpHelper>();
 builder.Services.AddSingleton<WeatherService>();
