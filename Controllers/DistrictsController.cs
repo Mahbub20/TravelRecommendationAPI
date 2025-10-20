@@ -20,8 +20,8 @@ namespace TravelRecommendationApi.Controllers
             _weatherService = weatherService;
         }
 
-        [HttpGet("top10")]
-        public async Task<IActionResult> GetTop10()
+        [HttpGet("top_ten_districts")]
+        public async Task<IActionResult> GetTopTenDistricts()
         {
             try
             {
