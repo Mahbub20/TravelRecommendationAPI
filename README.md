@@ -8,7 +8,7 @@ This ASP.NET Core Web API ranks Bangladesh districts by coolest temperature at 1
 
 ## How to run
 1. Clone:
-   git clone <your-repo>
+   git clone your repo url
 
 2. Run: dotnet add package Microsoft.Extensions.Caching.Memory
 
