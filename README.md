@@ -26,9 +26,7 @@ This ASP.NET Core Web API ranks Bangladesh districts by coolest temperature at 1
    dotnet build
 
 4. Run (development)
-   dotnet run --project . 
-   # or, if the solution has multiple projects, use the specific project folder:
-   # cd src/YourApiProject && dotnet run
+   dotnet run
 
 5. Open browser or call the API on the configured port (default is usually 5000/5001 for HTTPS).
 
