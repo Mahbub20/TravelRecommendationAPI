@@ -38,14 +38,14 @@ namespace TravelRecommendationApi.Services
                 return new TravelResponse
                 {
                     Result = "Recommended",
-                    Reason = $"Your destination is {tempDiff:F1}°C cooler and has significantly better air quality. Enjoy your trip!"
+                    Reason = $"Your destination is {Math.Abs(tempDiff):F1}°C cooler and has significantly better air quality. Enjoy your trip!"
                 };
             }
 
             return new TravelResponse
             {
                 Result = "Not Recommended",
-                Reason = "Your destination is hotter and has worse air quality than your current location. It’s better to stay where you are."
+                Reason = $"Your destination is {Math.Abs(tempDiff):F1}°C hotter and has worse air quality than your current location. It’s better to stay where you are."
             };
         }
     }
