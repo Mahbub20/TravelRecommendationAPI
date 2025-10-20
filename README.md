@@ -9,17 +9,20 @@ This ASP.NET Core Web API ranks Bangladesh districts by coolest temperature at 1
 ## How to run
 1. Clone:
    git clone <your-repo>
-2. Build:
+
+2. Run: dotnet add package Microsoft.Extensions.Caching.Memory
+
+3. Build:
    dotnet build
-3. Run: Open CMD or terminal on project root folder 
+4. Run: Open CMD or terminal on project root folder 
 
    dotnet run
 
-4. Get the top 10 districts list by this API.
+5. Get the top 10 districts list by this API.
 
 --> GET /api/Districts/top_ten_districts
 
-5. Get the travel recommendation message by the below API.
+6. Get the travel recommendation message by the below API.
 
 --> POST /api/Travel/recommendation
 
@@ -36,4 +39,5 @@ Request body:
 
 ## Libraries
 - Microsoft.Extensions.Caching.Memory
+
 
